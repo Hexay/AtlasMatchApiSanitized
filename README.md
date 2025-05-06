@@ -14,7 +14,8 @@ pip install -r requirements.txt
 {
     "is_development": true,
     "port": 8001,
-    "bm_token": "your_battlemetrics_token_here"
+    "bm_token": "your-battlemetrics-token-here",
+    "api_token": "your-secret-api-token-here"
 }
 ```
 
@@ -39,6 +40,18 @@ The server will start on `0.0.0.0:8001`.
 ### Convert ID (`POST /convert/{identifier}`)
 Converts between Steam and BattleMetrics IDs.
 
+**Authentication Required**
+Include your API token in the request header:
+```
+Authorization: your-secret-api-token-here
+```
+
+**Example Request:**
+```bash
+curl -X POST "http://localhost:8001/convert/76561198123456789" \
+     -H "Authorization: your-secret-api-token-here"
+```
+
 **Response:**
 ```json
 {
@@ -58,5 +71,6 @@ If no match is found:
 ```
 
 ## Error Handling
+- Returns 401 error if API token is missing or invalid
 - Returns 500 error if BattleMetrics token is not configured
 - Handles API errors gracefully with appropriate error messages 
