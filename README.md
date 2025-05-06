@@ -85,9 +85,3 @@ If no match is found:
 - In production, all traffic is SSL encrypted
 - Configuration file is mounted read-only in Docker
 - Sensitive tokens are never exposed in logs
-
-## Notes
-- The ngrok URL changes each time you restart the server (with free account)
-- The server must be running for the URL to be active
-- Monitor requests and debug using the ngrok web interface at http://localhost:4040
-- For a fixed URL, consider upgrading to a paid ngrok account 
