@@ -12,8 +12,8 @@ sudo apt install docker-compose git
 ## 2. Get Code
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/AtlasMatchApiSanitized.git
-cd AtlasMatchApiSanitized
+git clone https://github.com/your-username/MatchApiSanitized.git
+cd MatchApiSanitized
 
 # Create your config.json (replace with your tokens)
 cat > config.json << EOF
