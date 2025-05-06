@@ -1,0 +1,5 @@
+{
+    "is_development": true,
+    "port": 8001,
+    "bm_token": "bm_token"
+} 
