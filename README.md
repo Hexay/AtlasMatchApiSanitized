@@ -12,28 +12,37 @@ pip install -r requirements.txt
 2. Create a `config.json` file with the following structure:
 ```json
 {
-    "is_development": true,
     "port": 8001,
     "bm_token": "your-battlemetrics-token-here",
     "api_token": "your-secret-api-token-here"
 }
 ```
 
+3. Ngrok Configuration:
+The application uses ngrok to create a public URL. With a free ngrok account, you'll get a random URL each time you start the server. It will look something like:
+```
+https://xxxx-xxx-xx-xxx-xx.ngrok-free.app
+```
+
+For a fixed URL, you would need a paid ngrok account. The configuration is in `ngrok.yml`.
+
 ## Running the Application
 
-### Development Mode
-Set `"is_development": true` in `config.json` and run:
+Simply run:
 ```bash
 python main.py
 ```
-The server will start at `http://127.0.0.1:8001` with auto-reload enabled.
 
-### Production Mode
-Set `"is_development": false` in `config.json` and run:
-```bash
-python main.py
+The application will:
+1. Start the FastAPI server
+2. Generate a new public URL using ngrok
+3. Start the ngrok web interface at http://localhost:4040 (for monitoring requests)
+
+Example console output:
 ```
-The server will start on `0.0.0.0:8001`.
+Public URL: https://4156-130-43-180-70.ngrok-free.app
+Ngrok web interface: http://localhost:4040
+```
 
 ## API Endpoints
 
@@ -48,7 +57,8 @@ Authorization: your-secret-api-token-here
 
 **Example Request:**
 ```bash
-curl -X POST "http://localhost:8001/convert/76561198123456789" \
+# Replace with your actual ngrok URL shown in the console
+curl -X POST "https://4156-130-43-180-70.ngrok-free.app/convert/76561198123456789" \
      -H "Authorization: your-secret-api-token-here"
 ```
 
@@ -73,4 +83,10 @@ If no match is found:
 ## Error Handling
 - Returns 401 error if API token is missing or invalid
 - Returns 500 error if BattleMetrics token is not configured
-- Handles API errors gracefully with appropriate error messages 
+- Handles API errors gracefully with appropriate error messages
+
+## Notes
+- The ngrok URL changes each time you restart the server (with free account)
+- The server must be running for the URL to be active
+- Monitor requests and debug using the ngrok web interface at http://localhost:4040
+- For a fixed URL, consider upgrading to a paid ngrok account 

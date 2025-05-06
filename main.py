@@ -5,13 +5,14 @@ import json
 from pathlib import Path
 import httpx
 from typing import Optional, Dict, Any, Tuple
+from pyngrok import ngrok
+from pyngrok.conf import PyngrokConfig
 
 # Load config
 with open('config.json', 'r') as f:
     config = json.load(f)
 
 port = config['port']
-is_development = config['is_development']
 BM_TOKEN = config['bm_token']
 API_TOKEN = config['api_token']
 BM_API_URL = "https://api.battlemetrics.com"
@@ -118,12 +119,12 @@ async def convert_id(identifier: str, authorization: str = Header(..., descripti
 
 # main
 if __name__ == "__main__":
-    print(f"Development mode: {is_development}")
-    # local host for development
-    if is_development:
-        print(f"Starting development server at http://127.0.0.1:{port}")
-        uvicorn.run("main:app", host="127.0.0.1", port=port, reload=True)
-    # production server
-    else:
-        print(f"Starting production server on port {port}")
-        uvicorn.run("main:app", host="0.0.0.0", port=port) 
+    # Start ngrok tunnel
+    pyngrok_config = PyngrokConfig(config_path="ngrok.yml")
+    public_url = ngrok.connect(port, pyngrok_config=pyngrok_config).public_url
+    print(f"Public URL: {public_url}")
+    print(f"Ngrok web interface: http://localhost:4040")
+    
+    # Run the server
+    print(f"Starting server on port {port}")
+    uvicorn.run("main:app", host="0.0.0.0", port=port) 

@@ -1,0 +1,10 @@
+version: "2"
+authtoken: ""
+web_addr: "localhost:4040" # ngrok web interface
+tunnels:
+  api:
+    addr: 8001 # Match the port in your config.json
+    proto: http
+    inspect: true
+    subdomain: "hexaytron-api" 
+log: "ngrok.log"

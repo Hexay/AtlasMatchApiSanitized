@@ -1,6 +1,21 @@
 {
-    "is_development": true,
     "port": 8001,
     "bm_token": "bm-token",
-    "api_token": "your-secret-api-token-here"
+    "api_token": "your-secret-api-token-here",
+    "nginx": {
+        "enabled": true,
+        "listen_port": 80,
+        "server_name": "your-domain.com",
+        "ssl_enabled": false,
+        "config": {
+            "worker_processes": 1,
+            "events": {
+                "worker_connections": 1024
+            },
+            "http": {
+                "client_max_body_size": "10M",
+                "keepalive_timeout": 65
+            }
+        }
+    }
 } 
