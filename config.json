@@ -1,5 +1,6 @@
 {
     "is_development": true,
     "port": 8001,
-    "bm_token": "bm_token"
+    "bm_token": "bm-token",
+    "api_token": "your-secret-api-token-here"
 } 

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Header
 from pydantic import BaseModel
 import uvicorn
 import json
@@ -13,6 +13,7 @@ with open('config.json', 'r') as f:
 port = config['port']
 is_development = config['is_development']
 BM_TOKEN = config['bm_token']
+API_TOKEN = config['api_token']
 BM_API_URL = "https://api.battlemetrics.com"
 
 # fastapi app
@@ -31,6 +32,17 @@ class IDResponse(BaseModel):
 # helper functions
 def get_headers() -> Dict[str, str]:
     return {"Authorization": f"Bearer {BM_TOKEN}"}
+
+def verify_token(authorization: str = Header(..., description="Api token")) -> None:
+    if not authorization:
+        raise HTTPException(status_code=401, detail="Authorization header missing")
+    
+    try:
+        token = authorization.split()
+        if token != API_TOKEN:
+            raise HTTPException(status_code=401, detail="Invalid token")
+    except ValueError:
+        raise HTTPException(status_code=401, detail="Invalid authorization header format")
 
 def create_match_payload(identifier: str, id_type: str) -> Dict[str, Any]:
     return {
@@ -91,7 +103,10 @@ async def root():
     return {"message": "Match Api for Hexaytron"}
 
 @app.post("/convert/{identifier}", response_model=IDResponse)
-async def convert_id(identifier: str):
+async def convert_id(identifier: str, authorization: str = Header(..., description="Api token")):
+    # Verify the api token
+    verify_token(authorization)
+    
     if not BM_TOKEN:
         raise HTTPException(status_code=500, detail="BattleMetrics API token not configured")
 
