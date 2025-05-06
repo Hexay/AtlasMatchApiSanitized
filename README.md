@@ -2,7 +2,7 @@
 
 A FastAPI application that converts between Steam IDs and BattleMetrics IDs using the BattleMetrics API.
 
-## Setup
+## Local Development
 
 1. Install dependencies:
 ```bash
@@ -18,31 +18,15 @@ pip install -r requirements.txt
 }
 ```
 
-3. Ngrok Configuration:
-The application uses ngrok to create a public URL. With a free ngrok account, you'll get a random URL each time you start the server. It will look something like:
-```
-https://xxxx-xxx-xx-xxx-xx.ngrok-free.app
-```
-
-For a fixed URL, you would need a paid ngrok account. The configuration is in `ngrok.yml`.
-
-## Running the Application
-
-Simply run:
+3. Run the application:
 ```bash
 python main.py
 ```
+The server will start on `http://localhost:8001`
 
-The application will:
-1. Start the FastAPI server
-2. Generate a new public URL using ngrok
-3. Start the ngrok web interface at http://localhost:4040 (for monitoring requests)
+## Production Deployment
 
-Example console output:
-```
-Public URL: https://4156-130-43-180-70.ngrok-free.app
-Ngrok web interface: http://localhost:4040
-```
+See [DEPLOY.md](DEPLOY.md) for Docker deployment instructions.
 
 ## API Endpoints
 
@@ -57,8 +41,7 @@ Authorization: your-secret-api-token-here
 
 **Example Request:**
 ```bash
-# Replace with your actual ngrok URL shown in the console
-curl -X POST "https://4156-130-43-180-70.ngrok-free.app/convert/76561198123456789" \
+curl -X POST "http://localhost:8001/convert/76561198123456789" \
      -H "Authorization: your-secret-api-token-here"
 ```
 
@@ -84,6 +67,24 @@ If no match is found:
 - Returns 401 error if API token is missing or invalid
 - Returns 500 error if BattleMetrics token is not configured
 - Handles API errors gracefully with appropriate error messages
+
+## Project Structure
+```
+.
+├── main.py              # FastAPI application
+├── config.json          # Configuration file
+├── requirements.txt     # Python dependencies
+├── Dockerfile          # Docker configuration
+├── docker-compose.yml  # Docker Compose services
+├── nginx.conf          # Nginx reverse proxy config
+└── certbot/            # SSL certificate files
+```
+
+## Security Notes
+- API requires token authentication
+- In production, all traffic is SSL encrypted
+- Configuration file is mounted read-only in Docker
+- Sensitive tokens are never exposed in logs
 
 ## Notes
 - The ngrok URL changes each time you restart the server (with free account)
