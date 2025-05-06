@@ -5,8 +5,6 @@ import json
 from pathlib import Path
 import httpx
 from typing import Optional, Dict, Any, Tuple
-from pyngrok import ngrok
-from pyngrok.conf import PyngrokConfig
 
 # Load config
 with open('config.json', 'r') as f:
@@ -119,12 +117,5 @@ async def convert_id(identifier: str, authorization: str = Header(..., descripti
 
 # main
 if __name__ == "__main__":
-    # Start ngrok tunnel
-    pyngrok_config = PyngrokConfig(config_path="ngrok.yml")
-    public_url = ngrok.connect(port, pyngrok_config=pyngrok_config).public_url
-    print(f"Public URL: {public_url}")
-    print(f"Ngrok web interface: http://localhost:4040")
-    
-    # Run the server
     print(f"Starting server on port {port}")
     uvicorn.run("main:app", host="0.0.0.0", port=port) 
